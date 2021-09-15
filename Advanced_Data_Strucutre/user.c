@@ -13,6 +13,7 @@ int main(){
     
     printBST(root, 0);
 
+
     // printf("\n\nPreOrder : ");
     // preOrder(root);
 
@@ -27,13 +28,21 @@ int main(){
     // bstNode_t* item = searchBST(root, 40);
     // printBST(item, 0);
 
-    printf("\n\n\n*%d* ", deleteNodeBst(&root, 50));
-    printBST(root, 0);
-    printf("\n\n\n*%d* ", deleteNodeBst(&root, 55));
-    printBST(root, 0);
-    printf("\n\n\n*%d* ", deleteNodeBst(&root, 40));
-    printBST(root, 0);    
+    // printf("\n\n\n*%d* ", deleteNodeBst(&root, 50));
+    // printBST(root, 0);
+    // printf("\n\n\n*%d* ", deleteNodeBst(&root, 55));
+    // printBST(root, 0);
+    // printf("\n\n\n*%d* ", deleteNodeBst(&root, 40));
+    // printBST(root, 0);    
 
+    for(int i = 0; i < n; i++){
+        printf("\n\n\n*%d\t%d*\n\n\n", values[i], deleteNodeBst(&root, values[i]));
+        printBST(root, 0);
+        printf("\n\n\n\n\n");
+    }
+
+    printf("\n\n\n*%d\t%d*\n\n\n", 11, deleteNodeBst(&root, 11));
+    printBST(root, 0);
     printf("\n");
     return 0;
 }
