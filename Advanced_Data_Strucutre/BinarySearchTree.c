@@ -128,13 +128,18 @@ bstNode_t* searchBST(bstNode_t *root, DataType key){
 
 
 status_t deleteNodeBst (bstNode_t **PtrRoot, DataType key){
-    if(NULL == PtrRoot)
+    /*Check for invalid input*/
+    if(NULL == PtrRoot || NULL == *PtrRoot)  
         return FLASE;
     
-    bstNode_t *root = *PtrRoot, *parent;
+    bstNode_t *root = *PtrRoot, *parent = *PtrRoot;
 
     DataType flag = 0;
 
+    /* 
+    ** Sets root to the node which's to be deleted
+    ** and parent to it's parent node.
+    */
     while(root && !flag){
         if (root->value == key){
             flag = 1;
@@ -149,16 +154,32 @@ status_t deleteNodeBst (bstNode_t **PtrRoot, DataType key){
         }
 
     }
+
+    /*
+    ** Return if element's not present in the BST
+    */
     if(!flag)
         return FLASE;
 
+    /*
+    ** If the node to be deleted is leaf node.
+    ** then link the parent's respective child
+    ** (left/right) to NULL.
+    */
     if(NULL == root ->left && NULL == root->right)
 
         if(parent->value < root->value)
             parent->right = NULL;
-        else
+        else if(parent->value > root->value)
             parent->left = NULL;
+        else
+            *PtrRoot = NULL;  //if it's the only node in the BST
 
+    /* 
+    ** If the node to be deleted only has right child,
+    ** then link the parent's respective child(left/right)
+    ** to the key(root here) node's right child.
+    */
     else if(NULL == root->left && NULL != root->right)
 
         if(parent->value < root->value)
@@ -166,6 +187,11 @@ status_t deleteNodeBst (bstNode_t **PtrRoot, DataType key){
         else
             parent->left = root->right;
 
+    /*
+    ** If the node to be deleted only has left child
+    ** then link the parent's respective child(left/right)
+    ** to the key(root here) node's left child.
+    */ 
     else if(NULL == root->right && NULL != root->left)
 
         if(parent->value < root->value)
@@ -173,16 +199,25 @@ status_t deleteNodeBst (bstNode_t **PtrRoot, DataType key){
         else
             parent->left = root->left;
     
+    /*
+    ** If the node to be deleted only has both children
+    ** store the current position of ptr,
+    ** replace the node by the smallest child in the right subtree,
+    ** delete the smallest child of the right subtree. (Coz it's already-
+    ** -been replaced by the node that had to be deleted).   
+    */
     else{
         bstNode_t *curPtr = root;
         DataType temp;
-        root = root->right;
+        
+        root = root->right; //selecting the right subtree.
+        
         while(root->left)
-            root = root->left;
-        //printf("\nParent : %d, currentPtr : %d\n", parent->value, root->value);
-        temp = root->value;
-        deleteNodeBst(&parent, root->value);
-        curPtr->value = temp;    
+            root = root->left; //selecting the smallest(leftmost) node.
+        
+        temp = root->value; //temporary store the value of smallest node of right subtree.  
+        deleteNodeBst(&parent, root->value); //delete smallest node of right subtree.
+        curPtr->value = temp;//replace the node that's to be deleted by the smallest node of right subtree.    
     }
 
     return TRUE;    
