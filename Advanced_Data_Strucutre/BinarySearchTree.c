@@ -9,6 +9,7 @@ bstNode_t* createNode(DataType val){
     return node;
 }
 
+
 bstNode_t* getParentNode(bstNode_t *root, DataType val){
     if(NULL == root)
         return NULL;
@@ -27,6 +28,7 @@ bstNode_t* getParentNode(bstNode_t *root, DataType val){
     }
     return NULL;
 }
+
 
 status_t insertBST (bstNode_t *root, bstNode_t *node){
     if(NULL == root || NULL == node)
@@ -63,6 +65,7 @@ void printBST(bstNode_t* root, short space)
     printBST(root->left, space);
 }
 
+
 void inOrder(bstNode_t *root){
     if(NULL == root)
         return;
@@ -71,6 +74,7 @@ void inOrder(bstNode_t *root){
     printf("%d ", root->value);
     inOrder(root->right);
 }
+
 
 void preOrder(bstNode_t *root){
     if(NULL == root)
@@ -82,6 +86,7 @@ void preOrder(bstNode_t *root){
 
 }
 
+
 void postOrder(bstNode_t *root){
     if(NULL == root)
         return;
@@ -90,18 +95,19 @@ void postOrder(bstNode_t *root){
     printf("%d ", root->value);
 }
 
-status_t searchBST(bstNode_t *root, bstNode_t *node){
-    if(NULL == root || NULL == node)
-        return FLASE;
+
+bstNode_t* searchBST(bstNode_t *root, DataType key){
+    if(NULL == root)
+        return NULL;
 
     DataType path[MAX_NODES] = {-1}, flag = 0, i = 0;
 
     while(root && !flag){
-        if(node->value > root->value){
+        if(key > root->value){
             path[i++] = root->value;
             root = root->right;
         }
-        else if(node->value < root->value){
+        else if(key < root->value){
             path[i++] = root->value;
             root = root -> left;
         }
@@ -112,10 +118,72 @@ status_t searchBST(bstNode_t *root, bstNode_t *node){
     }
 
     if(!flag)
-        return FLASE;
+        return NULL;
 
     for(int k = 0; k < i; k++)
         printf("%d ", path[k]);
 
-    return TRUE;
+    return root;
+}
+
+
+status_t deleteNodeBst (bstNode_t **PtrRoot, DataType key){
+    if(NULL == PtrRoot)
+        return FLASE;
+    
+    bstNode_t *root = *PtrRoot, *parent;
+
+    DataType flag = 0;
+
+    while(root && !flag){
+        if (root->value == key){
+            flag = 1;
+            break;
+        }
+        parent = root;
+        if(key > root->value){
+            root = root->right;
+        }
+        else if(key < root->value){
+            root = root -> left;
+        }
+
+    }
+    if(!flag)
+        return FLASE;
+
+    if(NULL == root ->left && NULL == root->right)
+
+        if(parent->value < root->value)
+            parent->right = NULL;
+        else
+            parent->left = NULL;
+
+    else if(NULL == root->left && NULL != root->right)
+
+        if(parent->value < root->value)
+            parent->right = root->right;
+        else
+            parent->left = root->right;
+
+    else if(NULL == root->right && NULL != root->left)
+
+        if(parent->value < root->value)
+            parent->right = root->left;
+        else
+            parent->left = root->left;
+    
+    else{
+        bstNode_t *curPtr = root;
+        DataType temp;
+        root = root->right;
+        while(root->left)
+            root = root->left;
+        //printf("\nParent : %d, currentPtr : %d\n", parent->value, root->value);
+        temp = root->value;
+        deleteNodeBst(&parent, root->value);
+        curPtr->value = temp;    
+    }
+
+    return TRUE;    
 }

@@ -31,9 +31,9 @@ void preOrder(bstNode_t *root);
 
 void postOrder(bstNode_t *root);
 
-status_t searchBST (bstNode_t *root, bstNode_t *node);
+bstNode_t* searchBST (bstNode_t *root, DataType key);
 
-status_t deleteNodeBst (bstNode_t *root, bstNode_t *node);
+status_t deleteNodeBst (bstNode_t **PtrRoot, DataType key);
 
 status_t updateBST (bstNode_t *root, bstNode_t *node, bstNode_t * newNode);
 
