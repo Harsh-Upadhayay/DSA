@@ -1,8 +1,6 @@
 #include "Binary_Search_Tree.h"
 #include <stdlib.h>
 #include <stdio.h>
-#define SPACE_GAP_LEVEL 10
-
 
 bstNode_t* createNode(DataType val){
     bstNode_t* node = (bstNode_t*)calloc(1, sizeof(bstNode_t));
@@ -24,6 +22,8 @@ bstNode_t* getParentNode(bstNode_t *root, DataType val){
             return root;
         else if (root -> value < val && NULL != root->right)
             root = root -> right;
+        else 
+            return NULL;
     }
     return NULL;
 }
@@ -61,4 +61,61 @@ void printBST(bstNode_t* root, short space)
     printf("%d\n", root->value);
   
     printBST(root->left, space);
+}
+
+void inOrder(bstNode_t *root){
+    if(NULL == root)
+        return;
+
+    inOrder(root->left);
+    printf("%d ", root->value);
+    inOrder(root->right);
+}
+
+void preOrder(bstNode_t *root){
+    if(NULL == root)
+        return;
+
+    printf("%d ", root->value);
+    inOrder(root->left);
+    inOrder(root->right);
+
+}
+
+void postOrder(bstNode_t *root){
+    if(NULL == root)
+        return;
+    inOrder(root->left);
+    inOrder(root->right);
+    printf("%d ", root->value);
+}
+
+status_t searchBST(bstNode_t *root, bstNode_t *node){
+    if(NULL == root || NULL == node)
+        return FLASE;
+
+    DataType path[MAX_NODES] = {-1}, flag = 0, i = 0;
+
+    while(root && !flag){
+        if(node->value > root->value){
+            path[i++] = root->value;
+            root = root->right;
+        }
+        else if(node->value < root->value){
+            path[i++] = root->value;
+            root = root -> left;
+        }
+        else{
+            path[i++] = root->value;
+            flag = 1;
+        }
+    }
+
+    if(!flag)
+        return FLASE;
+
+    for(int k = 0; k < i; k++)
+        printf("%d ", path[k]);
+
+    return TRUE;
 }

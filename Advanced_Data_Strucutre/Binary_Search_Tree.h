@@ -1,4 +1,7 @@
 
+#define SPACE_GAP_LEVEL 10
+#define MAX_NODES 100
+
 typedef short DataType;
 
 struct BST_Node {
@@ -18,15 +21,15 @@ bstNode_t* createNode(DataType val);
 
 bstNode_t* getParentNode(bstNode_t* root, DataType val);
 
+status_t insertBST (bstNode_t *root, bstNode_t *node);
+
 void printBST(bstNode_t *root, short space);
 
-void inorder(bstNode_t *root);
+void inOrder(bstNode_t *root);
 
 void preOrder(bstNode_t *root);
 
-void inorder(bstNode_t *root);
-
-status_t insertBST (bstNode_t *root, bstNode_t *node);
+void postOrder(bstNode_t *root);
 
 status_t searchBST (bstNode_t *root, bstNode_t *node);
 
