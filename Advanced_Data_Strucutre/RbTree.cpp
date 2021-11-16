@@ -561,7 +561,7 @@ int main() {
   insertAtPath(root, "rlrl", make_pair(125, 1));
   RedBlackTree bst;
   bst.root = root;
-  bst.printTree();
+  
   // bst.insert(55);
   // bst.insert(40);
   // bst.insert(65);
