@@ -2,414 +2,332 @@
 
 #include <bits/stdc++.h>
 using namespace std;
-
-struct Node {
-  int data;
-  Node *parent;
-  Node *left;
-  Node *right;
-  int color;
-};
-
-typedef Node *NodePtr;
-
-class RedBlackTree {
-   public:
-  NodePtr root;
-  NodePtr TNULL;
-
-  void initializeNULLNode(NodePtr node, NodePtr parent) {
-    node->data = 0;
-    node->parent = parent;
-    node->left = nullptr;
-    node->right = nullptr;
-    node->color = 0;
-  }
-
-  // Preorder
-  void preOrderHelper(NodePtr node) {
-    if (node != TNULL) {
-      cout << node->data << " ";
-      preOrderHelper(node->left);
-      preOrderHelper(node->right);
-    }
-  }
-
-  // Inorder
-  void inOrderHelper(NodePtr node) {
-    if (node != TNULL) {
-      inOrderHelper(node->left);
-      cout << node->data << " ";
-      inOrderHelper(node->right);
-    }
-  }
-
-  // Post order
-  void postOrderHelper(NodePtr node) {
-    if (node != TNULL) {
-      postOrderHelper(node->left);
-      postOrderHelper(node->right);
-      cout << node->data << " ";
-    }
-  }
-
-  NodePtr searchTreeHelper(NodePtr node, int key) {
-    if (node == TNULL || key == node->data) {
-      return node;
-    }
-
-    if (key < node->data) {
-      return searchTreeHelper(node->left, key);
-    }
-    return searchTreeHelper(node->right, key);
-  }
-
-  // For balancing the tree after deletion
-  void deleteFix(NodePtr x) {
-    NodePtr s;
-    while (x != root && x->color == 0) {
-      if (x == x->parent->left) {
-        s = x->parent->right;
-        if (s->color == 1) {
-          s->color = 0;
-          x->parent->color = 1;
-          leftRotate(x->parent);
-          s = x->parent->right;
-        }
-
-        if (s->left->color == 0 && s->right->color == 0) {
-          s->color = 1;
-          x = x->parent;
-        } else {
-          if (s->right->color == 0) {
-            s->left->color = 0;
-            s->color = 1;
-            rightRotate(s);
-            s = x->parent->right;
-          }
-
-          s->color = x->parent->color;
-          x->parent->color = 0;
-          s->right->color = 0;
-          leftRotate(x->parent);
-          x = root;
-        }
-      } else {
-        s = x->parent->left;
-        if (s->color == 1) {
-          s->color = 0;
-          x->parent->color = 1;
-          rightRotate(x->parent);
-          s = x->parent->left;
-        }
-
-        if (s->right->color == 0 && s->right->color == 0) {
-          s->color = 1;
-          x = x->parent;
-        } else {
-          if (s->left->color == 0) {
-            s->right->color = 0;
-            s->color = 1;
-            leftRotate(s);
-            s = x->parent->left;
-          }
-
-          s->color = x->parent->color;
-          x->parent->color = 0;
-          s->left->color = 0;
-          rightRotate(x->parent);
-          x = root;
-        }
-      }
-    }
-    x->color = 0;
-  }
-
-  void rbTransplant(NodePtr u, NodePtr v) {
-    if (u->parent == nullptr) {
-      root = v;
-    } else if (u == u->parent->left) {
-      u->parent->left = v;
-    } else {
-      u->parent->right = v;
-    }
-    v->parent = u->parent;
-  }
-
-  void deleteNodeHelper(NodePtr node, int key) {
-    NodePtr z = TNULL;
-    NodePtr x, y;
-    while (node != TNULL) {
-      if (node->data == key) {
-        z = node;
-      }
-
-      if (node->data <= key) {
-        node = node->right;
-      } else {
-        node = node->left;
-      }
-    }
-
-    if (z == TNULL) {
-      cout << "Key not found in the tree" << endl;
-      return;
-    }
-
-    y = z;
-    int y_original_color = y->color;
-    if (z->left == TNULL) {
-      x = z->right;
-      rbTransplant(z, z->right);
-    } else if (z->right == TNULL) {
-      x = z->left;
-      rbTransplant(z, z->left);
-    } else {
-      y = minimum(z->right);
-      y_original_color = y->color;
-      x = y->right;
-      if (y->parent == z) {
-        x->parent = y;
-      } else {
-        rbTransplant(y, y->right);
-        y->right = z->right;
-        y->right->parent = y;
-      }
-
-      rbTransplant(z, y);
-      y->left = z->left;
-      y->left->parent = y;
-      y->color = z->color;
-    }
-    delete z;
-    if (y_original_color == 0) {
-      deleteFix(x);
-    }
-  }
-
-  // For balancing the tree after insertion
-  void insertFix(NodePtr k) {
-    NodePtr u;
-    while (k->parent->color == 1) {
-      if (k->parent == k->parent->parent->right) {
-        u = k->parent->parent->left;
-        if (u->color == 1) {
-          u->color = 0;
-          k->parent->color = 0;
-          k->parent->parent->color = 1;
-          k = k->parent->parent;
-        } else {
-          if (k == k->parent->left) {
-            k = k->parent;
-            rightRotate(k);
-          }
-          k->parent->color = 0;
-          k->parent->parent->color = 1;
-          leftRotate(k->parent->parent);
-        }
-      } else {
-        u = k->parent->parent->right;
-
-        if (u->color == 1) {
-          u->color = 0;
-          k->parent->color = 0;
-          k->parent->parent->color = 1;
-          k = k->parent->parent;
-        } else {
-          if (k == k->parent->right) {
-            k = k->parent;
-            leftRotate(k);
-          }
-          k->parent->color = 0;
-          k->parent->parent->color = 1;
-          rightRotate(k->parent->parent);
-        }
-      }
-      if (k == root) {
-        break;
-      }
-    }
-    root->color = 0;
-  }
-
-  void printHelper(NodePtr root, string indent, bool last) {
-    if (root != TNULL) {
-      cout << indent;
-      if (last) {
-        cout << "R----";
-        indent += "   ";
-      } else {
-        cout << "L----";
-        indent += "|  ";
-      }
-
-      string sColor = root->color ? "RED" : "BLACK";
-      cout << root->data << "(" << sColor << ")" << endl;
-      printHelper(root->left, indent, false);
-      printHelper(root->right, indent, true);
-    }
-  }
-
-   public:
-  RedBlackTree() {
-    TNULL = new Node;
-    TNULL->color = 0;
-    TNULL->left = nullptr;
-    TNULL->right = nullptr;
-    root = TNULL;
-  }
-
-  void preorder() {
-    preOrderHelper(this->root);
-  }
-
-  void inorder() {
-    inOrderHelper(this->root);
-  }
-
-  void postorder() {
-    postOrderHelper(this->root);
-  }
-
-  NodePtr searchTree(int k) {
-    return searchTreeHelper(this->root, k);
-  }
-
-  NodePtr minimum(NodePtr node) {
-    while (node->left != TNULL) {
-      node = node->left;
-    }
-    return node;
-  }
-
-  NodePtr maximum(NodePtr node) {
-    while (node->right != TNULL) {
-      node = node->right;
-    }
-    return node;
-  }
-
-  NodePtr successor(NodePtr x) {
-    if (x->right != TNULL) {
-      return minimum(x->right);
-    }
-
-    NodePtr y = x->parent;
-    while (y != TNULL && x == y->right) {
-      x = y;
-      y = y->parent;
-    }
-    return y;
-  }
-
-  NodePtr predecessor(NodePtr x) {
-    if (x->left != TNULL) {
-      return maximum(x->left);
-    }
-
-    NodePtr y = x->parent;
-    while (y != TNULL && x == y->left) {
-      x = y;
-      y = y->parent;
-    }
-
-    return y;
-  }
-
-  void leftRotate(NodePtr x) {
-    NodePtr y = x->right;
-    x->right = y->left;
-    if (y->left != TNULL) {
-      y->left->parent = x;
-    }
-    y->parent = x->parent;
-    if (x->parent == nullptr) {
-      this->root = y;
-    } else if (x == x->parent->left) {
-      x->parent->left = y;
-    } else {
-      x->parent->right = y;
-    }
-    y->left = x;
-    x->parent = y;
-  }
-
-  void rightRotate(NodePtr x) {
-    NodePtr y = x->left;
-    x->left = y->right;
-    if (y->right != TNULL) {
-      y->right->parent = x;
-    }
-    y->parent = x->parent;
-    if (x->parent == nullptr) {
-      this->root = y;
-    } else if (x == x->parent->right) {
-      x->parent->right = y;
-    } else {
-      x->parent->left = y;
-    }
-    y->right = x;
-    x->parent = y;
-  }
-
-  // Inserting a node
-  void insert(int key) {
-    NodePtr node = new Node;
-    node->parent = nullptr;
-    node->data = key;
-    node->left = TNULL;
-    node->right = TNULL;
-    node->color = 1;
-
-    NodePtr y = nullptr;
-    NodePtr x = this->root;
-
-    while (x != TNULL) {
-      y = x;
-      if (node->data < x->data) {
-        x = x->left;
-      } else {
-        x = x->right;
-      }
-    }
-
-    node->parent = y;
-    if (y == nullptr) {
-      root = node;
-    } else if (node->data < y->data) {
-      y->left = node;
-    } else {
-      y->right = node;
-    }
-
-    if (node->parent == nullptr) {
-      node->color = 0;
-      return;
-    }
-
-    if (node->parent->parent == nullptr) {
-      return;
-    }
-
-    insertFix(node);
-  }
-
-  NodePtr getRoot() {
-    return this->root;
-  }
-
-  void deleteNode(int data) {
-    deleteNodeHelper(this->root, data);
-  }
-
-  void printTree() {
-    if (root) {
-      printHelper(this->root, "", true);
-    }
-  }
-};
+// Red Black Tree implementation in C++
+// Author: Algorithm Tutor
+// Tutorial URL: https://algorithmtutor.com/Data-Structures/Tree/Red-Black-Trees/
 
 
+class RedBlackNode  
+{      
+    RedBlackNode leftChild, rightChild;  
+    int element;  
+    int color;  
+  
+    //constructor to set the value of a node having no left and right child  
+    public RedBlackNode(int element)  
+    {  
+        this( element, null, null );  
+    }   
+  
+    //constructor to set value of element, leftChild, rightChild and color  
+    public RedBlackNode(int element, RedBlackNode leftChild, RedBlackNode rightChild)  
+    {  
+        this.element = element;  
+        this.leftChild = leftChild;  
+        this.rightChild = rightChild;  
+        color = 1;  
+    }      
+}  
+  
+//create class CreateRedBlackTree for creating red-black tree  
+class CreateRedBlackTree  
+{  
+    private static RedBlackNode nullNode;   //define null node  
+    private RedBlackNode current;   //define current node   
+    private RedBlackNode parent;    //define parent node   
+    private RedBlackNode header;   // define header node  
+    private RedBlackNode grand; //define grand node  
+    private RedBlackNode great; //define great node  
+  
+    //create two variables, i.e., RED and Black for color and the values of these variables are 0 and 1 respectively.   
+    static final int RED   = 0;  
+    static final int BLACK = 1;      
+  
+    // using static initializer for initializing null Node  
+    static   
+    {  
+        nullNode = new RedBlackNode(0);  
+        nullNode.leftChild = nullNode;  
+        nullNode.rightChild = nullNode;  
+    }  
+  
+  
+    // Constructor for creating header node   
+    public CreateRedBlackTree(int header)  
+    {  
+        this.header = new RedBlackNode(header);  
+        this.header.leftChild = nullNode;  
+        this.header.rightChild = nullNode;  
+    }  
+  
+    // create removeAll() for making the tree logically empty  
+    public void removeAll()  
+    {  
+        header.rightChild = nullNode;  
+    }  
+  
+    //create method checkEmpty() to check whether the tree is empty or not  
+    public boolean checkEmpty()  
+    {  
+        return header.rightChild == nullNode;  
+    }  
+  
+    //create insertNewNode() method for adding a new node in the red black tree  
+    public void insertNewNode(int newElement )  
+    {  
+        current = parent = grand = header;      //set header value to current, parent, and grand node  
+        nullNode.element = newElement;          //set newElement to the element of the null node  
+  
+        //repeat statements until the element of the current node will not equal to the value of the newElement  
+        while (current.element != newElement)  
+        {              
+            great = grand;   
+            grand = parent;   
+            parent = current;  
+  
+            //if the value of the newElement is lesser than the current node element, the current node will point to the current left child else point to the current right child.  
+            current = newElement < current.element ? current.leftChild : current.rightChild;   
+  
+            // Check whether both the children are RED or NOT. If both the children are RED change them by using handleColors() method          
+            if (current.leftChild.color == RED && current.rightChild.color == RED)  
+                handleColors( newElement );  
+        }  
+              
+        // insertion of the new node will be fail if will already present in the tree  
+        if (current != nullNode)  
+            return;  
+  
+        //create a node having no left and right child and pass it to the current node   
+        current = new RedBlackNode(newElement, nullNode, nullNode);  
+  
+        //connect the current node with the parent    
+        if (newElement < parent.element)  
+            parent.leftChild = current;  
+        else  
+            parent.rightChild = current;          
+        handleColors( newElement );  
+    }  
+  
+    //create handleColors() method to maintain the colors of Red-black tree nodes  
+    private void handleColors(int newElement)  
+    {  
+        // flip the colors of the node  
+        current.color = RED;    //make current node RED  
+        current.leftChild.color = BLACK;    //make leftChild BLACK  
+        current.rightChild.color = BLACK;   //make rightChild BLACK  
+  
+        //check the color of the parent node  
+        if (parent.color == RED)     
+        {  
+            // perform rotation in case when the color of parent node is RED  
+            grand.color = RED;  
+              
+            if (newElement < grand.element && grand.element != newElement && newElement < parent.element)  
+                parent = performRotation( newElement, grand );  // Start dbl rotate  
+            current = performRotation(newElement, great );  
+            current.color = BLACK;  
+        }  
+          
+        // change the color of the root node with BLACK  
+        header.rightChild.color = BLACK;   
+    }  
+  
+    //create performRotation() method to perform dbl rotation  
+    private RedBlackNode performRotation(int newElement, RedBlackNode parent)  
+    {  
+        //check whether the value of the newElement is lesser than the element of the parent node or not  
+        if(newElement < parent.element)  
+            //if true, perform the rotation with the left child and right child based on condition and set return value to the left child of the parent node  
+            return parent.leftChild = newElement < parent.leftChild.element ? rotationWithLeftChild(parent.leftChild) : rotationWithRightChild(parent.leftChild) ;    
+        else  
+            //if false, perform the rotation with the left child and right child based on condition and set return value to the right child of the parent node  
+            return parent.rightChild = newElement < parent.rightChild.element ? rotationWithLeftChild(parent.rightChild) : rotationWithRightChild(parent.rightChild);    
+    }  
+  
+    //create rotationWithLeftChild() method  for rotating binary tree node with left child   
+    private RedBlackNode rotationWithLeftChild(RedBlackNode node2)  
+    {  
+        RedBlackNode node1 = node2.leftChild;  
+        node2.leftChild = node1.rightChild;  
+        node1.rightChild = node2;  
+        return node1;  
+    }  
+  
+    // create rotationWithRightChild() method for rotating binary tree node with right child  
+    private RedBlackNode rotationWithRightChild(RedBlackNode node1)  
+    {  
+        RedBlackNode node2 = node1.rightChild;  
+        node1.rightChild = node2.leftChild;  
+        node2.leftChild = node1.leftChild;  
+        return node2;  
+    }  
+  
+    // create nodesInTree() method for getting total number of nodes in a tree  
+    public int nodesInTree()  
+    {  
+        return nodesInTree(header.rightChild);  
+    }  
+    private int nodesInTree(RedBlackNode node)  
+    {  
+        if (node == nullNode)  
+            return 0;  
+        else  
+        {  
+            int size = 1;  
+            size = size + nodesInTree(node.leftChild);  
+            size = size + nodesInTree(node.rightChild);  
+            return size;  
+        }  
+    }  
+    // create searchNode() method to get desired node from the Red-Black tree  
+    public boolean searchNode(int value)  
+    {  
+        return searchNode(header.rightChild, value);  
+    }  
+    private boolean searchNode(RedBlackNode node, int value)  
+    {  
+        boolean check = false;  
+        while ((node != nullNode) && check != true)  
+        {  
+            int nodeValue = node.element;  
+            if (value < nodeValue)  
+                node = node.leftChild;  
+            else if (value > nodeValue)  
+                node = node.rightChild;  
+            else  
+            {  
+                check = true;  
+                break;  
+            }  
+            check = searchNode(node, value);  
+        }  
+        return check;  
+    }  
+  
+    //create preorderTraversal() method to perform inorder traversal  
+    public void preorderTraversal()  
+    {  
+        preorderTraversal(header.rightChild);  
+    }  
+    private void preorderTraversal(RedBlackNode node)  
+    {  
+        if (node != nullNode)  
+        {  
+            char c = 'R';  
+            if (node.color == 1)  
+                c = 'B';  
+            System.out.print(node.element +""+c+" ");  
+            preorderTraversal(node.leftChild);               
+            preorderTraversal(node.rightChild);  
+        }  
+    }  
+  
+    //create inorderTraversal() method to perform inorder traversal   
+    public void inorderTraversal()  
+    {  
+        inorderTraversal(header.rightChild);  
+    }  
+    private void inorderTraversal(RedBlackNode node)  
+    {  
+        if (node != nullNode)  
+        {  
+            inorderTraversal(node.leftChild);  
+            char c = 'R';  
+            if (node.color == 1)  
+                c = 'B';  
+            System.out.print(node.element +""+c+" ");  
+            inorderTraversal(node.rightChild);  
+        }  
+    }  
+  
+    //create postorderTraversal() method to perform inorder traversal   
+    public void postorderTraversal()  
+    {  
+        postorderTraversal(header.rightChild);  
+    }  
+    private void postorderTraversal(RedBlackNode node)  
+    {  
+        if (node != nullNode)  
+        {  
+            postorderTraversal(node.leftChild);               
+            postorderTraversal(node.rightChild);  
+            char c = 'R';  
+            if (node.color == 1)  
+             c = 'B';  
+            System.out.print(node.element +""+c+" ");  
+        }  
+    }       
+}  
+  
+//create class RedBlackTreeExample having main() method  
+class RedBlackTreeExample  
+{  
+    //main() method start  
+    public static void main(String[] args)  
+    {    
+        //create instance of the Scanner class  
+        Scanner scan = new Scanner(System.in);  
+  
+        //Create instance of the createRedBlackTree class and pass minimum integer value to the constructor to make it header node  
+        CreateRedBlackTree obj = new CreateRedBlackTree(Integer.MIN_VALUE);   
+        char choice;  
+  
+        //create switch case for performing the operation in Red Black Tree  
+        do      
+        {  
+            System.out.println("\nSelect an operation:\n");  
+            System.out.println("1. Insert a node ");  
+            System.out.println("2. Search a node");  
+            System.out.println("3. Get total number of nodes in Red Black Tree");  
+            System.out.println("4. Is Red Black Tree empty?");  
+            System.out.println("5. Remove all nodes from Red Black Tree");  
+            System.out.println("6. Display Red Black Tree in Post order");  
+            System.out.println("7. Display Red Black Tree in Pre order");  
+            System.out.println("8. Display Red Black Tree in In order");  
+  
+            //get choice from user  
+            int ch = scan.nextInt();              
+            switch (ch)  
+            {  
+                case 1 :   
+                    System.out.println("Please enter an element to insert in Red Black Tree");  
+                    obj.insertNewNode( scan.nextInt() );                       
+                    break;                            
+                case 2 :   
+                    System.out.println("Enter integer element to search");  
+                    System.out.println(obj.searchNode( scan.nextInt() ));  
+                    break;                                            
+                case 3 :   
+                    System.out.println(obj.nodesInTree());  
+                    break;       
+                case 4 :   
+                    System.out.println(obj.checkEmpty());  
+                    break;       
+                case 5 :   
+                    obj.removeAll();  
+                    System.out.println("\nTree Cleared successfully");  
+                    break;  
+                case 6 :   
+                    System.out.println("\nDisplay Red Black Tree in Post order");  
+                    obj.postorderTraversal();  
+                    break;  
+                case 7 :   
+                    System.out.println("\nDisplay Red Black Tree in Pre order");  
+                    obj.preorderTraversal();  
+                    break;  
+                case 8 :   
+                    System.out.println("\nDisplay Red Black Tree in In order");  
+                    obj.inorderTraversal();  
+                    break;  
+                default :   
+                    System.out.println("\n ");  
+                    break;      
+            }  
+            System.out.println("\nPress 'y' or 'Y' to continue \n");  
+            choice = scan.next().charAt(0);                          
+        } while (choice == 'Y'|| choice == 'y');                 
+    }  
+}  
 Node* createNode(pair<int, int> value){
     Node* va = (Node*)malloc(sizeof(Node));
     va->data = value.first;
@@ -559,9 +477,14 @@ int main() {
               
   Node* root = constBT(arr, n);
   insertAtPath(root, "rlrl", make_pair(125, 1));
-  RedBlackTree bst;
+  RBTree bst;
   bst.root = root;
-  
+  int insertions[] = {136, 138, 140, 142, 144};
+    for(auto item : insertions){
+        print_t(root);
+        bst.insert(item);
+    }
+    print_t(bst.root);
   // bst.insert(55);
   // bst.insert(40);
   // bst.insert(65);
