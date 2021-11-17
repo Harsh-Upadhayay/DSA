@@ -1,4 +1,5 @@
 // Driver Program for Red Black Tree
+// g++ main.cpp RBTree.cpp RBTreeExtended.cpp; ./a.out > output.txt; rm a.out 
 
 #include <bits/stdc++.h>
 #include "RBTree.h"
@@ -27,7 +28,7 @@ int main() {
     tree.constBT(arr, n);
     tree.insertAtPath("rlrl", make_pair(125, 0));
     
-    int insertions[] = {100, 80, 200, 90};
+    int insertions[] = {136, 138, 140, 142, 144};
     
     for(auto item : insertions){
         tree.insertValue(item);
@@ -37,30 +38,3 @@ int main() {
     tree.print_t();
 
 }
-// int main() {
-//     int data;
-//     RBTree rbTree1, rbTree2;
-
-//     cin >> data;
-//     while (data != 0)
-//     {
-//         rbTree1.insertValue(data);
-//         cin >> data;
-//     }
-
-//     rbTree1.preorder();
-
-//     cin >> data;
-//     while (data != 0)
-//     {
-//         rbTree2.insertValue(data);
-//         cin >> data;
-//     }
-
-//     rbTree2.preorder();
-
-//     rbTree1.merge(rbTree2);
-//     rbTree1.preorder();
-
-//     return 0;
-// }
