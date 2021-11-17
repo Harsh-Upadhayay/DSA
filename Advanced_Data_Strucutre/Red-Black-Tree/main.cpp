@@ -28,10 +28,10 @@ int main() {
     tree.constBT(arr, n);
     tree.insertAtPath("rlrl", make_pair(125, 0));
     
-    int insertions[] = {136, 138, 140, 142, 144};
+    int insertions[] = {125};
     
     for(auto item : insertions){
-        tree.insertValue(item);
+        tree.deleteValue(item);
         tree.print_t();
     }
         

@@ -254,7 +254,8 @@ Node* RBTree::deleteBST(Node *&root, int data) {
 
 void RBTree::deleteValue(int data) {
     Node *node = deleteBST(root, data);
-    fixDeleteRBTree(node);
+    print_t();
+    //fixDeleteRBTree(node);
 }
 
 void RBTree::inorderBST(Node *&ptr) {
