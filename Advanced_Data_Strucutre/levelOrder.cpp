@@ -16,8 +16,6 @@ Node* createNode(int val){
     va->right = va->left = NULL;
     return va;
 }
-
-
 Node* constBT(int arr[],int n){
 
     Node *root = NULL;
@@ -63,8 +61,6 @@ Node* constBT(int arr[],int n){
     }
     return root;
 }
-
-
 void insertAtPath(Node *root, string path, int value){
     for(int i = 0; i < path.length()-1; i++){
         char c = path[i];
@@ -85,8 +81,6 @@ void insertAtPath(Node *root, string path, int value){
     else
         root->left = createNode(value);
 }
-
-
 int _print_t(Node *tree, int is_left, int offset, int depth, char s[20][255])
 {
     char b[20];
@@ -121,8 +115,6 @@ int _print_t(Node *tree, int is_left, int offset, int depth, char s[20][255])
 
     return left + width + right;
 }
-
-
 void print_t(Node *tree)
 {
     char s[20][255];
@@ -154,6 +146,7 @@ class avl_tree {
          r = NULL;
       }
 };
+
 int avl_tree::height(Node *t) {
    int h = 0;
    if (t != NULL) {
