@@ -68,7 +68,7 @@ class doubleHash {
         
         while(hashTable[probe] != -1){
             if(-2 == hashTable[probe])
-                break;
+                break;                                  // insert at deleted element's location
             probe = (probe+offset) % TABLE_SIZE;
         }
 
@@ -94,11 +94,15 @@ class doubleHash {
     }
 
     bool search(int value){
-        int probe = hash1(value), offset = hash2(value);
+        int probe = hash1(value), offset = hash2(value), initialPos = probe;
 
-        while(hashTable[probe] != -1)
-            if(hashTable[probe] == value)
+        while(1)
+            if(hashTable[probe] == -1)              // won't stop the search if the element is deleted i.e. -2.
+                break;
+            else if(hashTable[probe] == value)
                 return true;
+            else if(probe = initialPos)
+                return false;
             else
                 probe = (probe + offset) % TABLE_SIZE; 
         
