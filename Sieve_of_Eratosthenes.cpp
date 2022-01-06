@@ -4,7 +4,7 @@
 #include<iostream>
 #include<vector>
 using namespace std;
-const long long MAX_SIZE = 100000001ll;
+const long long MAX_SIZE = 100;
 
 // isPrime[] : isPrime[i] is true if number is prime
 // prime[] : stores all prime number less than N
@@ -16,7 +16,7 @@ vector<long long >prime;
 vector<long long >SPF(MAX_SIZE);
 
 // function generate all prime number less then N in O(n)
-void manipulated_seive(int N)
+void manipulated_sieve(int N)
 {
 	// 0 and 1 are not prime
 	isprime[0] = isprime[1] = false ;
@@ -61,7 +61,7 @@ int main()
 {
 	int N = MAX_SIZE ; // Must be less than MAX_SIZE
 
-	manipulated_seive(N);
+	manipulated_sieve(N);
 
 	// print all prime number less then N
 	
