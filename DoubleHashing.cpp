@@ -16,6 +16,7 @@ class doubleHash {
     vector<int> hashTable;
     bitset<MAX_SIZE> isPrime;
 
+    /* Function to set sieve of Eratosthenes. */
     void __setSieve(){
         isPrime[0] = isPrime[1] = 1;
         for(long long i = 2; i*i <= MAX_SIZE; i++)
@@ -42,12 +43,15 @@ class doubleHash {
     doubleHash(int n){
         __setSieve();
         TABLE_SIZE = n;
+
+        /* Find the largest prime number smaller than hash table's size. */
         PRIME = TABLE_SIZE - 1;
         while(isPrime[PRIME] == 1)
             PRIME--;
 
         keysPresent = 0;
 
+        /* Fill the hash table with -1 (empty entries). */
         for(int i = 0; i < TABLE_SIZE; i++)
             hashTable.push_back(-1); 
     }
@@ -59,6 +63,7 @@ class doubleHash {
         cout<<endl;
     }
 
+    /* Function to insert value in hash table */
     void insert(int value){
 
         if(isFull())
@@ -67,7 +72,7 @@ class doubleHash {
         int probe = hash1(value), offset = hash2(value); // in linear probing offset = 1;
         
         while(hashTable[probe] != -1){
-            if(-2 == hashTable[probe])
+            if(-2 == hashTable[probe])                  
                 break;                                  // insert at deleted element's location
             probe = (probe+offset) % TABLE_SIZE;
         }
@@ -77,8 +82,9 @@ class doubleHash {
     }
 
     void erase(int value){
+        /* Return if element is not present */
         if(!search(value))
-            return;
+            return;     
         
         int probe = hash1(value), offset = hash2(value);
 
@@ -95,20 +101,24 @@ class doubleHash {
 
     bool search(int value){
         int probe = hash1(value), offset = hash2(value), initialPos = probe;
+        bool firstItr = true;
 
-        while(1)
-            if(hashTable[probe] == -1)              // won't stop the search if the element is deleted i.e. -2.
+        while(1){
+            if(hashTable[probe] == -1)              // Stop search if -1 is encountered.
                 break;
-            else if(hashTable[probe] == value)
+            else if(hashTable[probe] == value)      // Stop search after finding the element.
                 return true;
-            else if(probe = initialPos)
+            else if(probe == initialPos && !firstItr)             // Stop search if one complete traversal of hash table is completed.
                 return false;
             else
-                probe = (probe + offset) % TABLE_SIZE; 
-        
+                probe = ((probe + offset) % TABLE_SIZE); // if none of the above cases occur then update the index and check at it.
+
+            firstItr = false;
+        }
         return false;
     }
 
+    /* Function to display the hash table. */
     void print(){
         for(int i = 0; i < TABLE_SIZE; i++)
             cout<<hashTable[i]<<", ";
@@ -138,8 +148,8 @@ int main(){
         A.erase(queries[i]);
     }
 
-    A.insert(4);
     A.insert(9);
-    cout<<A.search(9);
+    A.insert(4);
+    cout<<A.search(9)<<"\n";
     A.print();
 }
