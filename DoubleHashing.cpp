@@ -8,7 +8,6 @@
 #include <bitset>
 #include <stdexcept>
 using namespace std;
-
 #define MAX_SIZE 10000001ll
 
 class doubleHash {
