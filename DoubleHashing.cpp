@@ -66,6 +66,9 @@ class doubleHash {
     /* Function to insert value in hash table */
     void insert(int value){
 
+        if(value == -1 || value == -2)
+            throw invalid_argument("-1 and -2 can't be inserted in the table");  
+
         if(isFull())
             throw out_of_range("Hash Table Full");
         
@@ -90,7 +93,7 @@ class doubleHash {
 
         while(hashTable[probe] != -1)
             if(hashTable[probe] == value){
-                hashTable[probe] = -2;
+                hashTable[probe] = -2;          // mark element as deleted (rather than unvisited(-1)).
                 keysPresent--;
                 return;
             }
@@ -104,14 +107,14 @@ class doubleHash {
         bool firstItr = true;
 
         while(1){
-            if(hashTable[probe] == -1)              // Stop search if -1 is encountered.
+            if(hashTable[probe] == -1)                   // Stop search if -1 is encountered.
                 break;
-            else if(hashTable[probe] == value)      // Stop search after finding the element.
+            else if(hashTable[probe] == value)           // Stop search after finding the element.
                 return true;
-            else if(probe == initialPos && !firstItr)             // Stop search if one complete traversal of hash table is completed.
+            else if(probe == initialPos && !firstItr)    // Stop search if one complete traversal of hash table is completed.
                 return false;
             else
-                probe = ((probe + offset) % TABLE_SIZE); // if none of the above cases occur then update the index and check at it.
+                probe = ((probe + offset) % TABLE_SIZE);  // if none of the above cases occur then update the index and check at it.
 
             firstItr = false;
         }
@@ -125,31 +128,70 @@ class doubleHash {
         cout<<"\n";
     }
 
+    
+
 };
 
 int main(){
-    doubleHash A(5);
-    A.insert(4);
-    A.insert(9);
-    A.insert(14);
-    A.insert(1);
-    
+    doubleHash myHash(17); // creates an empty hash table of size 5;
+
+    /* Inserts random element in the hash table */
     {
-    int queries[] = {1,2,3,4,5, 6, 7, 8, 9, 10, 11, 12, 13, 14}, n = sizeof(queries)/sizeof(queries[0]);
+    int insertions[] = {115, 12, 87, 66, 123, 44, 57, 69, 88, 13, 9, 1}, n = sizeof(insertions)/sizeof(insertions[0]);
     
     for(int i = 0; i < n; i++)
-        cout<<queries[i]<<", "<<A.search(queries[i])<<"\n";
+        myHash.insert(insertions[i]);
+    
+    cout<< "Status of hash table after initial insertions : "; myHash.print();
     }
 
+    /* 
+    ** Searches for random element in the hash table,
+    ** and prints them if found.
+    */
     {
-    int queries[] = {1,2,3,4,5, 6, 7, 8, 9, 10, 11, 12, 13, 14}, n = sizeof(queries)/sizeof(queries[0]);
+    int queries[] = {1, 2, 3, 123, 44, 57, 69, 88, 115, 4, 12, 19, 87, 21, 66, 57, 13, 9, 1}, n = sizeof(queries)/sizeof(queries[0]);
+    
+    cout<<"\n"<<"Search operation after first insertion : \n";
+
+    for(int i = 0; i < n; i++)
+        if(myHash.search(queries[i]))
+            cout<<queries[i]<<", "<<myHash.search(queries[i])<<"\n";
+    }
+
+    /* Deletes random element from the hash table. */
+    {
+    int deletions[] = {1,2,3,4,5, 6, 7, 8, 9, 10, 11, 12, 13, 14}, n = sizeof(deletions)/sizeof(deletions[0]);
     
     for(int i = 0; i < n; i++)
-        A.erase(queries[i]);
+        myHash.erase(deletions[i]);
+
+    cout<< "Status of hash table after deleting elements : "; myHash.print();
     }
 
-    A.insert(9);
-    A.insert(4);
-    cout<<A.search(9)<<"\n";
-    A.print();
+    /* Inserts the deleted elements again into the hash table. */
+    {
+    int insertions[] = {1, 9, 12, 13}, n = sizeof(insertions)/sizeof(insertions[0]);
+    
+    for(int i = 0; i < n; i++)
+        myHash.insert(insertions[i]);
+
+    cout<< "Status of hash table after inserting deleted elements : "; myHash.print();
+    }
+    
+    /* 
+    ** Searches for random element in the hash table,
+    ** and prints them if found.
+    */
+    {
+    int queries[] = {1, 2, 3, 123, 44, 57, 69, 88, 115, 4, 12, 19, 87, 21, 66, 57, 13, 9, 1}, n = sizeof(queries)/sizeof(queries[0]);
+    
+    cout<<"\n"<<"Search operation after second insertion : \n";
+
+    for(int i = 0; i < n; i++)
+        if(myHash.search(queries[i]))
+            cout<<queries[i]<<", "<<myHash.search(queries[i])<<"\n";
+    }
+    
+
 }
