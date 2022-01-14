@@ -17,7 +17,8 @@ bool fun(vector<int> v, int reqSum){
         if(reqSum == curSum)
             return true;  
     }
-    return false;}
+    return false;
+}
 
 int main(){
     vector<int> v = {5, 8, 6, 13, 3, -1};
