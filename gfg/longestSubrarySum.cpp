@@ -18,7 +18,7 @@ int fun(vector<int> v, int reqSum){
         else
             len = max(len, i-preSum[curSum]+1);
 
-        if(reqSum == curSum)
+        if(reqSum == curSum-reqSum)
             len = i+1;
     }
     
@@ -26,7 +26,7 @@ int fun(vector<int> v, int reqSum){
 }
 
 int main(){
-    vector<int> v = {5, 8, -4, -4, 5, -2, 2};
+    vector<int> v = {5, 8, -4, -3, 5, -1, 2};
     
     int reqSum = 5;
 
