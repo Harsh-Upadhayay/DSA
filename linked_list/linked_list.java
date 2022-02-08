@@ -46,10 +46,28 @@ public class linked_list<dataType>{
     public boolean deleteHead(){
         if(head == null)
             return false;
+
         head = head.next;
+        list_size--;
+
+        if(head == null)
+            tail = null;
+        return true;
+    }
+
+    boolean deleteEnd(){
+        if(head == tail)
+            return deleteHead();
+        node<dataType> temp = head;
+
+        while (temp.next.next != null)
+            temp = temp.next;
+        
+        temp.next = null;
+        
+        tail = temp;
         list_size--;
         return true;
     }
 
-    
 }

@@ -88,6 +88,26 @@ class linked_list {
         delete temp;
         list_size--;
 
+        if(!head)
+            tail = nullptr;
+
+        return true;
+    }
+
+    bool deleteEnd(){
+        if(head == tail)
+            return deleteHead();
+        node<dataType> *temp = head, *deleteTemp;
+
+        while (temp->next->next)
+            temp = temp->next;
+        
+        deleteTemp = temp->next;
+        temp->next = nullptr;
+        delete deleteTemp;
+        
+        tail = temp;
+        list_size--;
         return true;
     }
 };
@@ -101,8 +121,18 @@ int main(){
     for(auto value : values)
         myList.insert(value);
 
-    myList.insert(14, true);
-    myList.deleteHead();
 
+    myList.insert(14, true);
+
+    myList.printList();
+
+    for(int i = 0; i < 10; i++){
+        myList.deleteEnd();
+        myList.printList();
+    }
+
+    for(auto value : values)
+        myList.insert(value);
+    
     myList.printList();
 }
