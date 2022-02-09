@@ -7,7 +7,7 @@
 using namespace std;
 
 #define CHAR_SIZE 256
-#define weight 10
+#define weight 2
 
 /**
  * @brief hash function for rabin karp algorithm.
@@ -36,7 +36,7 @@ int str_hash(string &str){
 /**
  * @param str main string
  * @param sub_str substring
- * 
+ * @bug won't work for larger strings INTEGER OVERFLOW.
  * @brief slides window over the string to compare them by using rolling hash.  
  * hash("abc") = a*(d^2) + b*(d^1) + c*(d^0), where d can be any constant.
  * 
@@ -64,7 +64,7 @@ int fun(string &str, string &sub_str){
                     if(sub_str[j] != str[i-sub_str.size()+1+j])
                         break;
                 if(j == sub_str.size()){
-                    cout<<" "<<(i-sub_str.size()+1);
+                    cout<<(i-sub_str.size()+1)<<" ";
                     total_match++;
                 }
             }
