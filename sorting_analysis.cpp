@@ -157,7 +157,7 @@ int main(){
     int test_case = 10;
     int max_element = 1000;
     int max_size = 1000;
-    int min_size = 100;
+    int min_size = 1;
     vector<pair<int, pair<double, double>>> size_n_time;
 
     while(test_case--){
@@ -198,7 +198,7 @@ int main(){
         cout<<x.first<<setw(27)<<x.second.first<<setw(27)<<x.second.second<<endl;
     }
     
-    ofstream fout("time_analysis.txt");
+    ofstream fout("time_analysis.csv");
     fout<<"Array Size,MergeSort (µs),QuickSort (µs)\n";
     for(auto x : size_n_time){
         fout<<x.first<<","<<x.second.first<<","<<x.second.second<<endl;

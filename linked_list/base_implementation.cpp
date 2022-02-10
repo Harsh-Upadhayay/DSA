@@ -110,7 +110,12 @@ class linked_list {
         list_size--;
         return true;
     }
+
+    void reverseList(){
+        
+    }
 };
+
 
 
 int main(){
