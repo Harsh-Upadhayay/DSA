@@ -31,6 +31,15 @@ class linked_list {
         list_size = 0;
     }
 
+    /**
+     * @brief inserts the passed element at the end of linked list by default,
+     * but if atHead flag is turned on by caller then the element is inserted at 
+     * the head.
+     * 
+     * @param value element to be inserted.
+     * @param atHead if set true then insertion occurs at the end
+     * @return true if insertion is successfull else false.
+     */
     bool insert(dataType value, bool atHead = false){
         
         if(nullptr == head){
@@ -54,6 +63,10 @@ class linked_list {
         return true;
     }
 
+    /**
+     * @brief prints the list iteratively.
+     * 
+     */
     void printList(void){
         node<dataType> *temp = head;
 
@@ -65,6 +78,11 @@ class linked_list {
         cout<<endl;
     }
 
+    /**
+     * @brief prints the list recursively
+     * 
+     * @param temp head of linked list
+     */
     void printListRec(node<dataType> *temp){
         if(temp == nullptr){
             cout<<endl;
@@ -76,10 +94,20 @@ class linked_list {
         printListRec(temp->next);
     }
 
+    /**
+     * @brief Get the head 
+     * 
+     * @return node<dataType>* 
+     */
     node<dataType>* getHead(){
         return head;
     }
 
+    /**
+     * @brief deletes the head of list
+     * 
+     * @return true if deletion is successful else false
+     */
     bool deleteHead(){
         if(!head)
             return false;
@@ -111,8 +139,25 @@ class linked_list {
         return true;
     }
 
+    /**
+     * @brief reverses the list in O(n) time 
+     * and O(1) extra space.
+     * 
+     */
     void reverseList(){
-        
+        node<dataType> *tempNext = NULL, *curr = head, *prev = head;
+        if(NULL == head)
+            return;
+            
+        tempNext = head->next;
+        head->next = NULL;
+        while(tempNext){
+            curr = tempNext;
+            tempNext = tempNext->next;
+            curr->next = prev;
+            prev = curr;
+        }
+        head = curr;
     }
 };
 
@@ -131,13 +176,17 @@ int main(){
 
     myList.printList();
 
-    for(int i = 0; i < 10; i++){
-        myList.deleteEnd();
-        myList.printList();
-    }
+    myList.reverseList();
 
-    for(auto value : values)
-        myList.insert(value);
+    myList.printList();
+
+    // for(int i = 0; i < 10; i++){
+    //     myList.deleteEnd();
+    //     myList.printList();
+    // }
+
+    // for(auto value : values)
+    //     myList.insert(value);
     
     myList.printList();
 }
