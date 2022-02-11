@@ -154,9 +154,9 @@ int main(){
 
     //#define PRINT_ARRAY   // uncomment this line to see generated arrays
 
-    int test_case = 10;
+    int test_case = 100;
     int max_element = 1000;
-    int max_size = 1000;
+    int max_size = 500;
     int min_size = 1;
     vector<pair<int, pair<double, double>>> size_n_time;
 

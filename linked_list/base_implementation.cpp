@@ -71,11 +71,11 @@ class linked_list {
         node<dataType> *temp = head;
 
         while (temp) {
-            cout<<temp->data<<", ";
+            cout<<temp->data<<" --> ";
             temp = temp->next;
         }
         
-        cout<<endl;
+        cout<<"NULL\n";
     }
 
     /**
@@ -85,11 +85,11 @@ class linked_list {
      */
     void printListRec(node<dataType> *temp){
         if(temp == nullptr){
-            cout<<endl;
+            cout<<"NULL\n";
             return;
         }
 
-        cout<<temp->data<<", ";
+        cout<<temp->data<<" --> ";
         
         printListRec(temp->next);
     }
@@ -159,6 +159,19 @@ class linked_list {
         }
         head = curr;
     }
+
+    void removeDuplicates(){
+        if(head == NULL || head->next == NULL)
+            return;
+        
+        node<dataType> *t_head = head;
+
+        while(t_head && t_head->next){
+            while(t_head->next && t_head->data == t_head->next->data)
+                t_head->next = t_head->next->next;
+            t_head = t_head->next;
+        }
+    }
 };
 
 
@@ -166,17 +179,16 @@ class linked_list {
 int main(){
     linked_list<int> myList;
     
-    vector<int> values = {11, 12, 13};
+    vector<int> values = {2, 2, 3, 7, 10, 13, 18, 18, 20, 20, 27, 28, 30, 32, 33, 35, 40, 40, 41, 42, 45, 53, 54, 57, 57, 61, 66, 66, 68, 68, 69, 71, 72, 76, 77, 79, 81, 82, 84, 87, 87, 87, 90, 93, 95, 96, 98, 98, 98
+    };
 
     for(auto value : values)
         myList.insert(value);
 
 
-    myList.insert(14, true);
-
     myList.printList();
 
-    myList.reverseList();
+    myList.removeDuplicates();
 
     myList.printList();
 
@@ -188,5 +200,5 @@ int main(){
     // for(auto value : values)
     //     myList.insert(value);
     
-    myList.printList();
+    // myList.printList();
 }
