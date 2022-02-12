@@ -12,6 +12,14 @@ bool isEqual(int *a, int *b){
     return true;
 }
 
+/**
+ * @brief finds if given substring's anagram is present in 
+ * the main string.
+ * 
+ * @param str main string
+ * @param subStr sub string
+ * @return true if match is found, else false.
+ */
 bool fun(string &str, string &subStr){
     int n = str.size(), m = subStr.size();
     int pat_freq[CHAR] = {0}, str_freq[CHAR] = {0};
