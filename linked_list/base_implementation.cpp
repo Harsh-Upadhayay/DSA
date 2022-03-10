@@ -174,6 +174,8 @@ class linked_list {
     }
 };
 
+template <class T>
+void sort(linked_list<T> &arr,)
 
 
 int main(){
