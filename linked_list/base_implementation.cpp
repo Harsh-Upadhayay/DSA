@@ -4,11 +4,11 @@ using namespace std;
 
 template<class dataType = int>
 class node {
+    public:
     dataType data;
     node *next;
 
-    public:
-    
+
     node(){
         next = nullptr;
     }
@@ -122,6 +122,10 @@ class linked_list {
             tail = nullptr;
 
         return true;
+    }
+
+    node<dataType>** getHeadRef(){
+        return &head;
     }
 
     bool deleteEnd(){
