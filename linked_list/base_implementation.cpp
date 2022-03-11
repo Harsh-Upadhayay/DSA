@@ -7,6 +7,8 @@ class node {
     dataType data;
     node *next;
 
+    public:
+    
     node(){
         next = nullptr;
     }
@@ -63,7 +65,7 @@ class linked_list {
         return true;
     }
 
-    /**
+     /**
      * @brief prints the list iteratively.
      * 
      */
@@ -174,32 +176,28 @@ class linked_list {
     }
 };
 
-template <class T>
-void sort(linked_list<T> &arr,)
-
-
-int main(){
-    linked_list<int> myList;
+// int main(){
+//     linked_list<int> myList;
     
-    vector<int> values = {17, 13, 11, 16, 14, 12, 13, 17};
+//     vector<int> values = {17, 13, 11, 16, 14, 12, 13, 17};
 
-    for(auto value : values)
-        myList.insert(value);
+//     for(auto value : values)
+//         myList.insert(value);
 
 
-    myList.printList();
+//     myList.printList();
 
-    myList.removeDuplicates();
+//     myList.removeDuplicates();
 
-    myList.printList();
+//     myList.printList();
 
-    // for(int i = 0; i < 10; i++){
-    //     myList.deleteEnd();
-    //     myList.printList();
-    // }
+//     // for(int i = 0; i < 10; i++){
+//     //     myList.deleteEnd();
+//     //     myList.printList();
+//     // }
 
-    // for(auto value : values)
-    //     myList.insert(value);
+//     // for(auto value : values)
+//     //     myList.insert(value);
     
-    // myList.printList();
-}
+//     // myList.printList();
+// }
